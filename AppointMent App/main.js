@@ -110,3 +110,93 @@ appointmentForm.addEventListener('submit', handleFormSubmit);
 // Initial rendering of appointments
 renderAppointments();
 
+
+//// Adding Edit option in web page
+
+function renderAppointments() {
+  var appointmentsList = document.getElementById('appointments-list');
+  appointmentsList.innerHTML = '';
+
+  appointments.forEach(function(appointment, index) {
+    var appointmentItem = document.createElement('li');
+    appointmentItem.textContent = appointment.name + ' - ' + appointment.date + ' - ' + appointment.time;
+
+    var editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.addEventListener('click', function() {
+      editAppointment(index);
+    });
+
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', function() {
+      deleteAppointment(index);
+    });
+
+    appointmentItem.appendChild(editButton);
+    appointmentItem.appendChild(deleteButton);
+    appointmentsList.appendChild(appointmentItem);
+  });
+}
+
+
+function editAppointment(index) {
+  var appointment = appointments[index];
+
+  // Populate the form fields with the appointment data
+  var nameInput = document.getElementById('name');
+  var dateInput = document.getElementById('date');
+  var timeInput = document.getElementById('time');
+
+  nameInput.value = appointment.name;
+  dateInput.value = appointment.date;
+  timeInput.value = appointment.time;
+
+  // Remove the appointment from the list and local storage
+  appointments.splice(index, 1);
+  localStorage.setItem('appointments', JSON.stringify(appointments));
+  renderAppointments();
+}
+
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  var nameInput = document.getElementById('name');
+  var dateInput = document.getElementById('date');
+  var timeInput = document.getElementById('time');
+
+  var appointment = {
+    name: nameInput.value,
+    date: dateInput.value,
+    time: timeInput.value
+  };
+
+  // Check if there is an appointment being edited
+  var editIndex = appointments.findIndex(function(appointment) {
+    return appointment.isEditing === true;
+  });
+
+  if (editIndex !== -1) {
+    // Update the existing appointment
+    appointments[editIndex] = appointment;
+  } else {
+    // Add a new appointment
+    appointments.push(appointment);
+  }
+
+  localStorage.setItem('appointments', JSON.stringify(appointments));
+  renderAppointments();
+
+  // Clear the form inputs
+  nameInput.value = '';
+  dateInput.value = '';
+  timeInput.value = '';
+}
+
+
+
+
+
+
+

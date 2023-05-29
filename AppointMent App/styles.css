@@ -19,4 +19,12 @@ body {
   #appointments-list li {
     margin-bottom: 5px;
   }
+  form{
+    background: orange;
+    color: green;
+  }
+
+  input{
+    font: gray !important;
+  }
   
